@@ -42,6 +42,10 @@ const SankeyDiagram = ({ data }) => {
             // Highlight the link
             d3.select(this)
                 .attr('opacity', 1); // Change color to highlight
+                
+            d3.selectAll('.link')
+                .filter(link => link.name === d.name)
+                .attr('opacity', 1);
 
             // Highlight the nodes
             d3.selectAll('.node')
@@ -51,7 +55,7 @@ const SankeyDiagram = ({ data }) => {
             // Show tooltip
             setTooltip({
                 visible: true,
-                content: `Source: ${d.source.name}\nValue: ${d.source.value}\nTarget: ${d.target.name}\nValue: ${d.target.value}`,
+                content: `Speaker: ${d.name} \n Source: ${d.source.name}\nValue: ${d.source.value}\nTarget: ${d.target.name}\nValue: ${d.target.value}`,
                 x: event.pageX,
                 y: event.pageY,
             });
@@ -60,6 +64,10 @@ const SankeyDiagram = ({ data }) => {
             // Reset link color
             d3.select(this)
                 .attr('opacity', 0.6);
+
+            d3.selectAll('.link')
+                // .filter(link => link.name === d.name)
+                .attr('opacity', 0.6);    
 
             // Reset node color
             d3.selectAll('.node')
