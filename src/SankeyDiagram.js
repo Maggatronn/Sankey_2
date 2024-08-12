@@ -26,48 +26,94 @@ const SankeyDiagram = ({ data }) => {
     svg.selectAll('*').remove();
 
     // Draw links
+    // Select the links
     const link = svg.append('g')
-      .selectAll('path')
-      .data(links)
-      .enter()
-      .append('path')
-      .attr('d', sankeyLinkHorizontal())
-      .attr('stroke', d => d.color)
-      .attr('stroke-width', d => Math.max(1, d.width))
-      .attr('fill', 'none')
-      .attr('opacity', 0.5)
-      .on('mouseover', (event, d) => {
-        setTooltip({
-          visible: true,
-          content: `Source: ${d.source.name}\nTarget: ${d.target.name}\nValue: ${d.value}`,
-          x: event.pageX,
-          y: event.pageY,
+        .selectAll('path')
+        .data(links)
+        .enter()
+        .append('path')
+        .attr('d', sankeyLinkHorizontal())
+        .attr('stroke-width', d => Math.max(1, d.width))
+        .attr('stroke', d => d.color)
+        .attr('fill', 'none')
+        .attr('stroke-opacity', 0.6)
+        .attr('class', 'link')
+        .on('mouseover', function(event, d) {
+            // Highlight the link
+            d3.select(this)
+                .attr('opacity', 1); // Change color to highlight
+
+            // Highlight the nodes
+            d3.selectAll('.node')
+                .filter(node => node.id === d.source || node.id === d.target)
+                .attr('opacity', 1); // Change color to highlight
+
+            // Show tooltip
+            setTooltip({
+                visible: true,
+                content: `Source: ${d.source.name}\nValue: ${d.source.value}\nTarget: ${d.target.name}\nValue: ${d.target.value}`,
+                x: event.pageX,
+                y: event.pageY,
+            });
+        })
+        .on('mouseout', function(event, d) {
+            // Reset link color
+            d3.select(this)
+                .attr('opacity', 0.6);
+
+            // Reset node color
+            d3.selectAll('.node')
+                .filter(node => node.id === d.source || node.id === d.target)
+                .attr('opacity', 0.6);
+
+            // Hide tooltip
+            setTooltip({ visible: false, content: '', x: 0, y: 0 });
         });
-      })
-      .on('mouseout', () => setTooltip({ visible: false, content: '', x: 0, y: 0 }));
 
     // Draw nodes
     const node = svg.append('g')
-      .selectAll('rect')
-      .data(nodes)
-      .enter()
-      .append('rect')
-      .attr('x', d => d.x0)
-      .attr('y', d => d.y0)
-      .attr('height', d => d.y1 - d.y0)
-      .attr('width', d => d.x1 - d.x0)
-      .attr('fill', 'blue')
-      .attr('stroke', 'black')
-      .on('mouseover', (event, d) => {
-        setTooltip({
-          visible: true,
-          content: `Node: ${d.name}\nValue: ${d.value}`,
-          x: event.pageX,
-          y: event.pageY,
-        });
-      })
-      .on('mouseout', () => setTooltip({ visible: false, content: '', x: 0, y: 0 }));
+        .selectAll('rect')
+        .data(nodes)
+        .enter()
+        .append('rect')
+        .attr('x', d => d.x0)
+        .attr('y', d => d.y0)
+        .attr('height', d => d.y1 - d.y0)
+        .attr('width', d => d.x1 - d.x0)
+        .attr('fill', 'blue')
+        .attr('opacity', 0.6)
+        // .attr('stroke', 'black')
+        .on('mouseover', function(event, d) {
+            // Highlight the node
+            d3.select(this)
+                .attr('opacity', 1); // Change color to highlight
 
+            // Highlight the links
+            d3.selectAll('.link')
+                .filter(link => link.source === d || link.target === d)
+                .attr('stroke-opacity', 1); // Change color to highlight
+
+            // Show tooltip
+            setTooltip({
+                visible: true,
+                content: `Node: ${d.name}\nValue: ${d.value}`,
+                x: event.pageX,
+                y: event.pageY,
+            });
+        })
+        .on('mouseout', function(event, d) {
+            // Reset node color
+            d3.select(this)
+                .attr('opacity', 0.6);
+
+            // Reset link color
+            d3.selectAll('.link')
+                .filter(link => link.source === d || link.target === d)
+                .attr('stroke-opacity', 0.6);
+
+            // Hide tooltip
+            setTooltip({ visible: false, content: '', x: 0, y: 0 });
+        });
     // Add node labels
     svg.append('g')
       .selectAll('text')
