@@ -5,14 +5,16 @@ import SankeyDiagram from './SankeyDiagram';
 
 const data = {
   nodes: [
-    { name: 'A', id: 0 },
+    { name: 'A', id: 0 }, 
     { name: 'B', id: 1 },
     { name: 'C', id: 2 },
     { name: 'D', id: 3 },
     { name: 'E', id: 4 },
+    { name: 'F', id: 5 },
   ],
   links: [
     { source: 0, target: 1, value: 10, color: 'red', name: "Michael"},
+    { source: 5, target: 1, value: 10, color: 'orange', name: "Maggie"},
     { source: 1, target: 2, value: 20, color: 'green' , name: "Michael"},
     { source: 2, target: 3, value: 10, color: 'blue' , name: "Michael"},
     { source: 2, target: 4, value: 10, color: 'purple' , name: "Maggie"},
